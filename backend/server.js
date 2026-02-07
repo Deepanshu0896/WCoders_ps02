@@ -9,6 +9,7 @@ const groupRoutes = require('./routes/groups');
 const peerRoutes = require('./routes/peers');
 const resourceRoutes = require('./routes/resources');
 const adminRoutes = require('./routes/admin');
+const timetableRoutes = require('./routes/timetable');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/peers', peerRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/timetable', timetableRoutes);
 // Health check
 app.get('/', (req, res) => {
   res.json({ message: '✅ Resource & Peer Optimizer API is running!' });

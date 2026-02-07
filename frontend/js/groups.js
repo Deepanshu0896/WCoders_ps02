@@ -7,6 +7,19 @@ if (!user || !token) {
     window.location.href = 'login.html';
 }
 
+
+// Show Admin Panel link if user is admin
+if (user && user.isAdmin) {
+    const nav = document.querySelector('.sidebar-nav');
+    if (nav) {
+        const adminLink = document.createElement('a');
+        adminLink.href = 'admin.html';
+        adminLink.className = 'nav-item';
+        adminLink.innerHTML = '<span class="icon">🛡️</span> Admin Panel';
+        nav.appendChild(adminLink);
+    }
+}
+
 // Browse Groups Page
 if (document.getElementById('groupsList')) {
     loadGroups();

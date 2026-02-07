@@ -11,6 +11,19 @@ if (!user || !token) {
 // Display user name
 document.getElementById('userName').textContent = user.name;
 
+// Show Admin Panel link if user is admin
+if (user.isAdmin) {
+    const nav = document.querySelector('.sidebar-nav');
+    const adminLink = document.createElement('a');
+    adminLink.href = 'admin.html';
+    adminLink.className = 'nav-item';
+    adminLink.innerHTML = '<span class="icon">🛡️</span> Admin Panel';
+
+    // Insert before the last item (Settings) or append
+    // Let's append it to the end of the navigation links
+    nav.appendChild(adminLink);
+}
+
 // Availability toggle
 const availabilityToggle = document.getElementById('availabilityToggle');
 availabilityToggle.addEventListener('change', async (e) => {

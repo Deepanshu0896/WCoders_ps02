@@ -1,97 +1,100 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Find Peers - PeerSync</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <div class="dashboard-container">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="sidebar-header">
-          <h2>📚 PeerSync</h2>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find Peers - PeerSync</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>📚 PeerSync</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span class="icon">🏠</span>
+          Dashboard
+        </a>
+        <a href="groups.html" class="nav-item">
+          <span class="icon">👥</span>
+          Groups
+        </a>
+        <a href="peers.html" class="nav-item active">
+          <span class="icon">🔍</span>
+          Find Peers
+        </a>
+        <a href="resources.html" class="nav-item">
+          <span class="icon">📍</span>
+          Resources
+        </a>
+        <a href="my-schedule.html" class="nav-item">
+          <span class="icon">📅</span>
+          My Schedule
+        </a>
+        <a href="settings.html" class="nav-item">
+          <span class="icon">⚙️</span>
+          Settings
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <button onclick="logout()" class="btn-logout">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <h1>Find Peers</h1>
+      </header>
+
+      <!-- Search and Filters -->
+      <section class="filters-section">
+        <div class="search-bar">
+          <input type="text" id="searchPeer" placeholder="🔍 Search by name..." />
         </div>
-        <nav class="sidebar-nav">
-          <a href="dashboard.html" class="nav-item">
-            <span class="icon">🏠</span>
-            Dashboard
-          </a>
-          <a href="groups.html" class="nav-item">
-            <span class="icon">👥</span>
-            Groups
-          </a>
-          <a href="peers.html" class="nav-item active">
-            <span class="icon">🔍</span>
-            Find Peers
-          </a>
-          <a href="resources.html" class="nav-item">
-            <span class="icon">📍</span>
-            Resources
-          </a>
-          <a href="settings.html" class="nav-item">
-            <span class="icon">⚙️</span>
-            Settings
-          </a>
-        </nav>
-        <div class="sidebar-footer">
-          <button onclick="logout()" class="btn-logout">Logout</button>
+        <div class="filters">
+          <select id="branchFilter" class="filter-select">
+            <option value="">All Branches</option>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="ME">ME</option>
+            <option value="CE">CE</option>
+            <option value="EE">EE</option>
+            <option value="IT">IT</option>
+          </select>
+
+          <select id="yearFilter" class="filter-select">
+            <option value="">All Years</option>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4">4th Year</option>
+          </select>
+
+          <button onclick="applyPeerFilters()" class="btn-primary">
+            Apply
+          </button>
+          <button onclick="clearPeerFilters()" class="btn-outline">
+            Clear
+          </button>
         </div>
-      </aside>
+      </section>
 
-      <!-- Main Content -->
-      <main class="main-content">
-        <header class="topbar">
-          <h1>Find Peers</h1>
-        </header>
+      <!-- Peers List -->
+      <section class="peers-section">
+        <div id="peersList" class="peers-grid">
+          <div class="loading">Loading available peers...</div>
+        </div>
+      </section>
+    </main>
+  </div>
 
-        <!-- Search and Filters -->
-        <section class="filters-section">
-          <div class="search-bar">
-            <input
-              type="text"
-              id="searchPeer"
-              placeholder="🔍 Search by name..."
-            />
-          </div>
-          <div class="filters">
-            <select id="branchFilter" class="filter-select">
-              <option value="">All Branches</option>
-              <option value="CSE">CSE</option>
-              <option value="ECE">ECE</option>
-              <option value="ME">ME</option>
-              <option value="CE">CE</option>
-              <option value="EE">EE</option>
-              <option value="IT">IT</option>
-            </select>
+  <script src="js/peers.js"></script>
+</body>
 
-            <select id="yearFilter" class="filter-select">
-              <option value="">All Years</option>
-              <option value="1">1st Year</option>
-              <option value="2">2nd Year</option>
-              <option value="3">3rd Year</option>
-              <option value="4">4th Year</option>
-            </select>
-
-            <button onclick="applyPeerFilters()" class="btn-primary">
-              Apply
-            </button>
-            <button onclick="clearPeerFilters()" class="btn-outline">
-              Clear
-            </button>
-          </div>
-        </section>
-
-        <!-- Peers List -->
-        <section class="peers-section">
-          <div id="peersList" class="peers-grid">
-            <div class="loading">Loading available peers...</div>
-          </div>
-        </section>
-      </main>
-    </div>
-
-    <script src="js/peers.js"></script>
-  </body>
 </html>
