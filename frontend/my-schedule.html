@@ -91,6 +91,7 @@
     </div>
 
     <script>
+        const API_URL = 'http://localhost:5000/api';
         const user = JSON.parse(localStorage.getItem('user'));
 
         if (!user) {
@@ -104,18 +105,42 @@
         loadTimetable();
         loadFreeTime();
 
-        function loadTimetable() {
-            const timetable = JSON.parse(localStorage.getItem(`timetable_${user.id}`)) || [];
+        async function loadTimetable() {
+            try {
+                const response = await fetch(`${API_URL}/timetable/${user.id}`);
+                const data = await response.json();
 
-            document.getElementById('classSlots').innerHTML = '';
+                document.getElementById('classSlots').innerHTML = '';
 
-            if (timetable.length > 0) {
-                timetable.forEach((slot, index) => {
-                    addClassSlot(slot);
-                });
-                calculateFreeTime();
-            } else {
-                addClassSlot(); // Add one empty slot
+                if (data.success && data.timetable && data.timetable.slots.length > 0) {
+                    data.timetable.slots.forEach(slot => {
+                        addClassSlot(slot);
+                    });
+
+                    // Also update localStorage for backup
+                    localStorage.setItem(`timetable_${user.id}`, JSON.stringify(data.timetable.slots));
+                    calculateFreeTime();
+                } else {
+                    // Fallback to localStorage
+                    const localTimetable = JSON.parse(localStorage.getItem(`timetable_${user.id}`)) || [];
+                    if (localTimetable.length > 0) {
+                        localTimetable.forEach(slot => addClassSlot(slot));
+                        calculateFreeTime();
+                    } else {
+                        addClassSlot(); // Add one empty slot
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading timetable:', error);
+
+                // Fallback to localStorage on error
+                const localTimetable = JSON.parse(localStorage.getItem(`timetable_${user.id}`)) || [];
+                if (localTimetable.length > 0) {
+                    localTimetable.forEach(slot => addClassSlot(slot));
+                    calculateFreeTime();
+                } else {
+                    addClassSlot();
+                }
             }
         }
 
@@ -225,7 +250,7 @@
             document.getElementById(slotId).remove();
         }
 
-        function saveTimetable() {
+        async function saveTimetable() {
             const slots = [];
 
             document.querySelectorAll('#classSlots .time-slot').forEach(slot => {
@@ -245,13 +270,32 @@
                 return;
             }
 
-            localStorage.setItem(`timetable_${user.id}`, JSON.stringify(slots));
-            alert('Timetable saved successfully!');
+            try {
+                // Save to Backend
+                const response = await fetch(`${API_URL}/timetable/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: user.id, slots })
+                });
 
-            calculateFreeTime();
+                if (response.ok) {
+                    // Also save to localStorage for fallback/speed
+                    localStorage.setItem(`timetable_${user.id}`, JSON.stringify(slots));
+                    alert('Timetable saved successfully to server!');
+                    calculateFreeTime();
+                } else {
+                    alert('Failed to save timetable to server.');
+                }
+            } catch (error) {
+                console.error('Error saving timetable:', error);
+                // Fallback save
+                localStorage.setItem(`timetable_${user.id}`, JSON.stringify(slots));
+                alert('Saved locally only (Server error).');
+                calculateFreeTime();
+            }
         }
 
-        function saveFreeTime() {
+        function calculateFreeTime() {
             const slots = [];
 
             document.querySelectorAll('#freeSlots .time-slot').forEach(slot => {

@@ -24,6 +24,8 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/peers', peerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/resources', resourcesRoutes);
+app.use('/api/timetable', require('./routes/timetable'));
+
 // Health check
 app.get('/', (req, res) => {
   res.json({ message: '✅ Resource & Peer Optimizer API is running!' });
