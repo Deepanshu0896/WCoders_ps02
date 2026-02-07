@@ -1154,3 +1154,37 @@ input:checked+.slider:before {
     color: var(--text-secondary);
     font-size: 0.875rem;
 }
+peers-section {
+    padding: 0 2rem 2rem;
+}
+.peer-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    margin: 0 auto 1rem;
+}
+
+.peer-name {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.peer-info {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.peer-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
