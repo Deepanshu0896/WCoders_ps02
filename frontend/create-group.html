@@ -1,139 +1,155 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Group - PeerSync</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>📚 PeerSync</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item">
+            <span class="icon">🏠</span>
+            Dashboard
+          </a>
+          <a href="groups.html" class="nav-item active">
+            <span class="icon">👥</span>
+            Groups
+          </a>
+          <a href="peers.html" class="nav-item">
+            <span class="icon">🔍</span>
+            Find Peers
+          </a>
+          <a href="resources.html" class="nav-item">
+            <span class="icon">📍</span>
+            Resources
+          </a>
+          <a href="settings.html" class="nav-item">
+            <span class="icon">⚙️</span>
+            Settings
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <button onclick="logout()" class="btn-logout">Logout</button>
+        </div>
+      </aside>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create Group - PeerSync</title>
-  <link rel="stylesheet" href="css/style.css" />
-</head>
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="topbar">
+          <h1>Create Study Group</h1>
+        </header>
 
-<body>
-  <div class="dashboard-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h2>📚 PeerSync</h2>
-      </div>
-      <nav class="sidebar-nav">
-        <a href="dashboard.html" class="nav-item">
-          <span class="icon">🏠</span>
-          Dashboard
-        </a>
-        <a href="groups.html" class="nav-item active">
-          <span class="icon">👥</span>
-          Groups
-        </a>
-        <a href="peers.html" class="nav-item">
-          <span class="icon">🔍</span>
-          Find Peers
-        </a>
-        <a href="resources.html" class="nav-item">
-          <span class="icon">📍</span>
-          Resources
-        </a>
-        <a href="my-schedule.html" class="nav-item">
-          <span class="icon">📅</span>
-          My Schedule
-        </a>
-        <a href="settings.html" class="nav-item">
-          <span class="icon">⚙️</span>
-          Settings
-        </a>
-      </nav>
-      <div class="sidebar-footer">
-        <button onclick="logout()" class="btn-logout">Logout</button>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-      <header class="topbar">
-        <h1>Create Study Group</h1>
-      </header>
-
-      <section class="form-section">
-        <form id="createGroupForm" class="create-group-form">
-          <div class="form-group">
-            <label for="title">Group Title *</label>
-            <input type="text" id="title" placeholder="e.g., Data Structures Revision" required />
-          </div>
-
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" rows="3" placeholder="What will you cover in this session?"></textarea>
-          </div>
-
-          <div class="form-row">
+        <section class="form-section">
+          <form id="createGroupForm" class="create-group-form">
             <div class="form-group">
-              <label for="activityType">Activity Type *</label>
-              <select id="activityType" required>
-                <option value="study_group">Study Group</option>
-                <option value="project_work">Project Work</option>
-                <option value="assignment_help">Assignment Help</option>
-                <option value="exam_prep">Exam Prep</option>
-                <option value="skill_workshop">Skill Workshop</option>
+              <label for="title">Group Title *</label>
+              <input
+                type="text"
+                id="title"
+                placeholder="e.g., Data Structures Revision"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea
+                id="description"
+                rows="3"
+                placeholder="What will you cover in this session?"
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="activityType">Activity Type *</label>
+                <select id="activityType" required>
+                  <option value="study_group">Study Group</option>
+                  <option value="project_work">Project Work</option>
+                  <option value="assignment_help">Assignment Help</option>
+                  <option value="exam_prep">Exam Prep</option>
+                  <option value="skill_workshop">Skill Workshop</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="subject">Subject</label>
+                <input
+                  type="text"
+                  id="subject"
+                  placeholder="e.g., Data Structures"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="location">Location *</label>
+              <select id="location" required>
+                <option value="">Select Location</option>
+                <option value="Library Room 204">Library Room 204</option>
+                <option value="Library Room 305">Library Room 305</option>
+                <option value="Computer Lab C">Computer Lab C</option>
+                <option value="Seminar Hall A">Seminar Hall A</option>
+                <option value="Canteen">Canteen</option>
               </select>
             </div>
 
-            <div class="form-group">
-              <label for="subject">Subject</label>
-              <input type="text" id="subject" placeholder="e.g., Data Structures" />
-            </div>
-          </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="startTime">Start Time *</label>
+                <input type="datetime-local" id="startTime" required />
+              </div>
 
-          <div class="form-group">
-            <label for="location">Location *</label>
-            <select id="location" required>
-              <option value="">Select Location</option>
-              <option value="Library Room 204">Library Room 204</option>
-              <option value="Library Room 305">Library Room 305</option>
-              <option value="Computer Lab C">Computer Lab C</option>
-              <option value="Seminar Hall A">Seminar Hall A</option>
-              <option value="Canteen">Canteen</option>
-            </select>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="startTime">Start Time *</label>
-              <input type="datetime-local" id="startTime" required />
+              <div class="form-group">
+                <label for="endTime">End Time *</label>
+                <input type="datetime-local" id="endTime" required />
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="endTime">End Time *</label>
-              <input type="datetime-local" id="endTime" required />
+            <div class="form-row">
+              <div class="form-group">
+                <label for="maxMembers">Max Members</label>
+                <input
+                  type="number"
+                  id="maxMembers"
+                  value="5"
+                  min="2"
+                  max="20"
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="isPrivate" />
+                  Make this group private (invite-only)
+                </label>
+              </div>
             </div>
-          </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="maxMembers">Max Members</label>
-              <input type="number" id="maxMembers" value="5" min="2" max="20" />
+            <div id="errorMessage" class="error-message"></div>
+
+            <div class="form-actions">
+              <button
+                type="button"
+                onclick="window.location.href = 'groups.html'"
+                class="btn-outline"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn-primary">Create Group</button>
             </div>
+          </form>
+        </section>
+      </main>
+    </div>
 
-            <div class="form-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="isPrivate" />
-                Make this group private (invite-only)
-              </label>
-            </div>
-          </div>
-
-          <div id="errorMessage" class="error-message"></div>
-
-          <div class="form-actions">
-            <button type="button" onclick="window.location.href = 'groups.html'" class="btn-outline">
-              Cancel
-            </button>
-            <button type="submit" class="btn-primary">Create Group</button>
-          </div>
-        </form>
-      </section>
-    </main>
-  </div>
-
-  <script src="js/groups.js"></script>
-</body>
-
+    <script src="js/groups.js"></script>
+  </body>
 </html>

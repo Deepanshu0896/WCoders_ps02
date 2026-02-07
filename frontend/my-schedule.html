@@ -32,13 +32,13 @@
                     <span class="icon">📍</span>
                     Resources
                 </a>
-                <a href="my-schedule.html" class="nav-item active">
-                    <span class="icon">📅</span>
-                    My Schedule
-                </a>
                 <a href="settings.html" class="nav-item">
                     <span class="icon">⚙️</span>
                     Settings
+                </a>
+                <a href="my-schedule.html" class="nav-item active">
+                    <span class="icon">📅</span>
+                    My Schedule
                 </a>
             </nav>
             <div class="sidebar-footer">
@@ -91,7 +91,6 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:5000/api';
         const user = JSON.parse(localStorage.getItem('user'));
 
         if (!user) {
@@ -105,43 +104,18 @@
         loadTimetable();
         loadFreeTime();
 
-        async function loadTimetable() {
-            try {
-                // Try fetching from backend first
-                const response = await fetch(`${API_URL}/timetable/${user.id}`);
-                const data = await response.json();
+        function loadTimetable() {
+            const timetable = JSON.parse(localStorage.getItem(`timetable_${user.id}`)) || [];
 
-                let timetable = [];
-                if (data.success && data.timetable.length > 0) {
-                    timetable = data.timetable;
-                    // Update local storage to keep it in sync
-                    localStorage.setItem(`timetable_${user.id}`, JSON.stringify(timetable));
-                } else {
-                    // Fallback to local storage if backend is empty (migration scenario)
-                    timetable = JSON.parse(localStorage.getItem(`timetable_${user.id}`)) || [];
-                }
+            document.getElementById('classSlots').innerHTML = '';
 
-                document.getElementById('classSlots').innerHTML = '';
-
-                if (timetable.length > 0) {
-                    timetable.forEach((slot, index) => {
-                        addClassSlot(slot);
-                    });
-                    calculateFreeTime();
-                } else {
-                    addClassSlot(); // Add one empty slot
-                }
-            } catch (error) {
-                console.error('Error loading timetable:', error);
-                // Fallback to local storage on error
-                const timetable = JSON.parse(localStorage.getItem(`timetable_${user.id}`)) || [];
-                document.getElementById('classSlots').innerHTML = '';
-                if (timetable.length > 0) {
-                    timetable.forEach(slot => addClassSlot(slot));
-                    calculateFreeTime();
-                } else {
-                    addClassSlot();
-                }
+            if (timetable.length > 0) {
+                timetable.forEach((slot, index) => {
+                    addClassSlot(slot);
+                });
+                calculateFreeTime();
+            } else {
+                addClassSlot(); // Add one empty slot
             }
         }
 
@@ -251,7 +225,7 @@
             document.getElementById(slotId).remove();
         }
 
-        async function saveTimetable() {
+        function saveTimetable() {
             const slots = [];
 
             document.querySelectorAll('#classSlots .time-slot').forEach(slot => {
@@ -271,32 +245,8 @@
                 return;
             }
 
-            // Save to local storage
             localStorage.setItem(`timetable_${user.id}`, JSON.stringify(slots));
-
-            // Save to backend
-            try {
-                const response = await fetch(`${API_URL}/timetable`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        slots
-                    }),
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    alert('Timetable saved successfully and synced!');
-                } else {
-                    alert('Timetable saved locally, but failed to sync: ' + data.message);
-                }
-            } catch (error) {
-                console.error('Error syncing timetable:', error);
-                alert('Timetable saved locally, but server connection failed.');
-            }
+            alert('Timetable saved successfully!');
 
             calculateFreeTime();
         }
@@ -317,7 +267,7 @@
             });
 
             localStorage.setItem(`freetime_${user.id}`, JSON.stringify(slots));
-            alert('Free time saved successfully! (Local only)');
+            alert('Free time saved successfully!');
         }
 
         function calculateFreeTime() {

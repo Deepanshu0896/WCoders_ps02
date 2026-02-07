@@ -10,7 +10,7 @@
 
 <body>
   <div class="dashboard-container">
-    <!--SLIDEbar -->
+    <!-- Sidebar (same as dashboard) -->
     <aside class="sidebar">
       <div class="sidebar-header">
         <h2>📚 PeerSync</h2>
@@ -24,7 +24,6 @@
           <span class="icon">👥</span>
           Groups
         </a>
-
         <a href="peers.html" class="nav-item">
           <span class="icon">🔍</span>
           Find Peers
@@ -33,13 +32,13 @@
           <span class="icon">📍</span>
           Resources
         </a>
-        <a href="my-schedule.html" class="nav-item">
-          <span class="icon">📅</span>
-          My Schedule
-        </a>
         <a href="settings.html" class="nav-item">
           <span class="icon">⚙️</span>
           Settings
+        </a>
+        <a href="my-schedule.html" class="nav-item">
+          <span class="icon">📅</span>
+          My Schedule
         </a>
       </nav>
       <div class="sidebar-footer">
@@ -86,6 +85,14 @@
             Apply Filters
           </button>
           <button onclick="clearFilters()" class="btn-outline">Clear</button>
+        </div>
+      </section>
+
+      <!-- Recommended Groups -->
+      <section id="recommendedSection" class="groups-section" style="display: none; margin-bottom: 2rem;">
+        <h2 style="color: var(--secondary-color); margin-bottom: 1rem;">✨ Recommended for You</h2>
+        <div id="recommendedList" class="groups-grid">
+          <!-- Suggested groups will appear here -->
         </div>
       </section>
 

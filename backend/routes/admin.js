@@ -33,7 +33,7 @@ router.get('/users/count', async (req, res) => {
 router.get('/users/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
-
+    
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -55,7 +55,7 @@ router.get('/users/:id', async (req, res) => {
 router.delete('/users/:id', async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
-
+    
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -83,7 +83,7 @@ router.delete('/users/:id', async (req, res) => {
 router.put('/users/:id/toggle-status', async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-
+    
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -153,11 +153,12 @@ router.delete('/resources/:id', async (req, res) => {
   });
 });
 
+module.exports = router;
 // Delete group (admin only)
 router.delete('/groups/:id', async (req, res) => {
   try {
     const group = await Group.findByIdAndDelete(req.params.id);
-
+    
     if (!group) {
       return res.status(404).json({ message: 'Group not found' });
     }
@@ -171,5 +172,3 @@ router.delete('/groups/:id', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-
-module.exports = router;

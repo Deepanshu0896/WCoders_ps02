@@ -11,19 +11,6 @@ if (!user || !token) {
 // Display user name
 document.getElementById('userName').textContent = user.name;
 
-// Show Admin Panel link if user is admin
-if (user.isAdmin) {
-    const nav = document.querySelector('.sidebar-nav');
-    const adminLink = document.createElement('a');
-    adminLink.href = 'admin.html';
-    adminLink.className = 'nav-item';
-    adminLink.innerHTML = '<span class="icon">🛡️</span> Admin Panel';
-
-    // Insert before the last item (Settings) or append
-    // Let's append it to the end of the navigation links
-    nav.appendChild(adminLink);
-}
-
 // Availability toggle
 const availabilityToggle = document.getElementById('availabilityToggle');
 availabilityToggle.addEventListener('change', async (e) => {
@@ -85,45 +72,6 @@ async function loadDashboardData() {
     } catch (error) {
         console.error('Error fetching groups:', error);
     }
-
-    // Load AI Suggestions
-    loadSuggestions();
-}
-
-async function loadSuggestions() {
-    try {
-        const response = await fetch(`${API_URL}/peers/suggestions/${user.id}`);
-        const data = await response.json();
-
-        const container = document.getElementById('aiSuggestions');
-
-        if (!data.success || data.suggestions.length === 0) {
-            container.innerHTML = '<p class="info-message">No suggestions found. Try adding more skills/interests!</p>';
-            return;
-        }
-
-        container.innerHTML = data.suggestions.map(peer => `
-            <div class="suggestion-card">
-                <div class="suggestion-header">
-                    <span class="avatar">${getInitials(peer.name)}</span>
-                    <div class="suggestion-info">
-                        <h4>${peer.name}</h4>
-                        <span class="match-score">🔥 ${peer.score} Match Points</span>
-                    </div>
-                </div>
-                <p class="match-reason">✨ ${peer.matchReason}</p>
-                <button onclick="window.location.href='peers.html'" class="btn-sm btn-outline">View Profile</button>
-            </div>
-        `).join('');
-
-    } catch (error) {
-        console.error('Error loading suggestions:', error);
-        document.getElementById('aiSuggestions').innerHTML = '<p class="error-message">Failed to load suggestions</p>';
-    }
-}
-
-function getInitials(name) {
-    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 }
 
 function displayUpcomingGroups(groups) {
@@ -134,7 +82,10 @@ function displayUpcomingGroups(groups) {
         return;
     }
 
-    container.innerHTML = groups.slice(0, 3).map(group => `
+    container.innerHTML = groups.slice(0, 3).map(group => {
+        const isCreator = group.creatorId === user.id || (group.creatorId._id === user.id);
+
+        return `
         <div class="group-card">
             <div class="group-header">
                 <h3 class="group-title">${group.title}</h3>
@@ -145,8 +96,14 @@ function displayUpcomingGroups(groups) {
                 <div>⏰ ${formatDateTime(group.startTime)} - ${formatTime(group.endTime)}</div>
                 <div>👥 ${group.members.length}/${group.maxMembers} members</div>
             </div>
+            <div class="group-footer" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                ${isCreator
+                ? `<button class="btn-sm btn-danger" onclick="deleteGroup('${group._id}')" style="background: var(--danger-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Delete</button>`
+                : `<button class="btn-sm btn-warning" onclick="leaveGroup('${group._id}')" style="background: var(--warning-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Leave</button>`
+            }
+            </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function formatActivityType(type) {
@@ -184,5 +141,160 @@ function logout() {
     window.location.href = 'index.html';
 }
 
+
+// Check for admin status and add link
+// Check for admin status and add link
+const storedUser = JSON.parse(localStorage.getItem('user'));
+
+// Use user object as source of truth. Sync isAdmin key for other scripts (admin.js)
+if (storedUser && storedUser.isAdmin) {
+    if (localStorage.getItem('isAdmin') !== 'true') {
+        localStorage.setItem('isAdmin', 'true');
+    }
+
+    const sidebarNav = document.querySelector('.sidebar-nav');
+    const adminLink = document.createElement('a');
+    adminLink.href = 'admin.html';
+    adminLink.className = 'nav-item';
+    adminLink.innerHTML = '<span class="icon">👨‍💼</span> Admin Panel';
+
+    // Insert before the logout button's container or append
+    sidebarNav.appendChild(adminLink);
+}
+
+// Live Time Update
+function updateLiveTime() {
+    const timeElement = document.getElementById('liveTime');
+    if (timeElement) {
+        const now = new Date();
+        const options = {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        timeElement.textContent = '🕒 ' + now.toLocaleString('en-US', options);
+    }
+}
+
+// Update every second
+setInterval(updateLiveTime, 1000);
+updateLiveTime(); // Initial call
+
 // Load data on page load
 loadDashboardData();
+loadAiSuggestions();
+
+async function loadAiSuggestions() {
+    try {
+        const response = await fetch(`${API_URL}/groups/suggested/${user.id}`);
+        const data = await response.json();
+
+        const container = document.getElementById('aiSuggestions');
+
+        if (!data.success || data.groups.length === 0) {
+            container.innerHTML = '<p class="info-message">Turn on "Available" or add interests to get suggestions!</p>';
+            return;
+        }
+
+        container.innerHTML = data.groups.slice(0, 3).map(group => `
+            <div class="group-card" style="border: 2px solid var(--secondary-color);">
+                <div style="background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; margin-bottom: 8px;">
+                    ✨ ${group.reasons.join(', ')}
+                </div>
+                <div class="group-header">
+                    <h3 class="group-title">${group.title}</h3>
+                    <span class="group-badge">${formatActivityType(group.activityType)}</span>
+                </div>
+                <div class="group-meta">
+                    <div>📍 ${group.location}</div>
+                    <div>⏰ ${formatDateTime(group.startTime)} - ${formatTime(group.endTime)}</div>
+                    <div>👥 ${group.members.length}/${group.maxMembers} members</div>
+                </div>
+                <div class="group-footer" style="margin-top: 1rem;">
+                    <button class="btn-join" onclick="joinGroup('${group._id}')">Join Group</button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        console.error('Error loading suggestions:', error);
+    }
+}
+
+async function joinGroup(groupId) {
+    try {
+        const response = await fetch(`${API_URL}/groups/join/${groupId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: user.id }),
+        });
+
+        if (response.ok) {
+            alert('Successfully joined the group!');
+            loadDashboardData(); // Reload upcoming groups
+            loadAiSuggestions(); // Refresh suggestions
+        } else {
+            const data = await response.json();
+            alert(data.message || 'Failed to join group');
+        }
+    } catch (error) {
+        console.error('Error joining group:', error);
+        alert('Error joining group');
+    }
+}
+
+async function deleteGroup(groupId) {
+    if (!confirm('Are you sure you want to delete this group?')) return;
+
+    try {
+        const response = await fetch(`${API_URL}/groups/${groupId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: user.id }),
+        });
+
+        if (response.ok) {
+            alert('Group deleted successfully');
+            loadDashboardData(); // Reload dashboard
+        } else {
+            const data = await response.json();
+            alert(data.message || 'Failed to delete group');
+        }
+    } catch (error) {
+        console.error('Error deleting group:', error);
+        alert('Error deleting group');
+    }
+}
+
+async function leaveGroup(groupId) {
+    if (!confirm('Are you sure you want to leave this group?')) return;
+
+    try {
+        const response = await fetch(`${API_URL}/groups/leave/${groupId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: user.id }),
+        });
+
+        if (response.ok) {
+            alert('Left group successfully');
+            loadDashboardData(); // Reload dashboard
+        } else {
+            const data = await response.json();
+            alert(data.message || 'Failed to leave group');
+        }
+    } catch (error) {
+        console.error('Error leaving group:', error);
+        alert('Error leaving group');
+    }
+}

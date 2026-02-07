@@ -111,6 +111,7 @@ if (document.getElementById('loginForm')) {
                 // Save token and user data
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
+                localStorage.setItem('isAdmin', data.user.isAdmin);
 
                 showSuccess('Login successful! Redirecting...');
 
@@ -171,5 +172,5 @@ function showSuccess(message) {
 function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = 'index.html';
+    window.location.href = 'login.html';
 }

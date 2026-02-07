@@ -7,22 +7,24 @@ if (!user || !token) {
     window.location.href = 'login.html';
 }
 
-
-// Show Admin Panel link if user is admin
-if (user && user.isAdmin) {
-    const nav = document.querySelector('.sidebar-nav');
-    if (nav) {
-        const adminLink = document.createElement('a');
-        adminLink.href = 'admin.html';
-        adminLink.className = 'nav-item';
-        adminLink.innerHTML = '<span class="icon">🛡️</span> Admin Panel';
-        nav.appendChild(adminLink);
-    }
-}
-
 // Browse Groups Page
 if (document.getElementById('groupsList')) {
+    loadSuggestedGroups(); // Load AI suggestions
     loadGroups();
+}
+
+async function loadSuggestedGroups() {
+    try {
+        const response = await fetch(`${API_URL}/groups/suggested/${user.id}`);
+        const data = await response.json();
+
+        if (data.success && data.groups.length > 0) {
+            document.getElementById('recommendedSection').style.display = 'block';
+            displayGroups(data.groups, 'recommendedList', true);
+        }
+    } catch (error) {
+        console.error('Error loading suggestions:', error);
+    }
 }
 
 async function loadGroups(filters = {}) {
@@ -32,28 +34,33 @@ async function loadGroups(filters = {}) {
         const response = await fetch(`${API_URL}/groups/browse?${queryParams}`);
         const data = await response.json();
 
-        displayGroups(data.groups);
+        displayGroups(data.groups, 'groupsList');
     } catch (error) {
         console.error('Error loading groups:', error);
         document.getElementById('groupsList').innerHTML = '<p class="info-message">Error loading groups</p>';
     }
 }
 
-function displayGroups(groups) {
-    const container = document.getElementById('groupsList');
+function displayGroups(groups, containerId, isRecommended = false) {
+    const container = document.getElementById(containerId);
 
     if (groups.length === 0) {
-        container.innerHTML = '<p class="info-message">No groups found. Be the first to create one!</p>';
+        container.innerHTML = '<p class="info-message">No groups found.</p>';
         return;
     }
 
     container.innerHTML = groups.map(group => {
-        const isCreator = group.creatorId._id === user.id;
-        const isAdmin = user.isAdmin;
-        const canDelete = isCreator || isAdmin;
+        // AI Reason badge if recommended
+        const recommendationHtml = isRecommended && group.reasons
+            ? `<div style="background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; margin-bottom: 8px;">✨ ${group.reasons.join(', ')}</div>`
+            : '';
+
+        // Check if user is creator
+        const isCreator = group.creatorId._id === user.id || group.creatorId === user.id;
 
         return `
-        <div class="group-card">
+        <div class="group-card" ${isRecommended ? 'style="border: 2px solid var(--secondary-color);"' : ''}>
+            ${recommendationHtml}
             <div class="group-header">
                 <h3 class="group-title">${group.title}</h3>
                 <span class="group-badge">${formatActivityType(group.activityType)}</span>
@@ -61,30 +68,27 @@ function displayGroups(groups) {
             ${group.description ? `<p class="group-description">${group.description}</p>` : ''}
             <div class="group-meta">
                 <div>📍 ${group.location}</div>
-                <div>⏰ ${formatDateTime(group.startTime)}</div>
+                <div>⏰ ${formatDateTime(group.startTime)} - ${formatTime(group.endTime)}</div>
                 ${group.subject ? `<div>📚 ${group.subject}</div>` : ''}
                 <div>👤 Created by ${group.creatorId.name} (${group.creatorId.branch} - ${group.creatorId.year})</div>
             </div>
             <div class="group-footer">
                 <span class="members-count">👥 ${group.members.length}/${group.maxMembers} members</span>
-                <div class="action-buttons">
-                    ${group.members.length < group.maxMembers && !group.members.some(m => m._id === user.id)
-                ? `<button class="btn-join" onclick="joinGroup('${group._id}')">Join Group</button>`
-                : group.members.some(m => m._id === user.id)
+                ${isCreator
+                ? `<button class="btn-join" style="background: var(--danger-color);" onclick="deleteGroup('${group._id}')">Delete Group</button>`
+                : group.members.some(m => (m._id || m) === user.id)
                     ? `<button class="btn-join" style="background: var(--secondary-color);" disabled>Joined ✓</button>`
-                    : `<button class="btn-join" disabled>Full</button>`
+                    : group.members.length >= group.maxMembers
+                        ? `<button class="btn-join" disabled>Full</button>`
+                        : `<button class="btn-join" onclick="joinGroup('${group._id}')">Join Group</button>`
             }
-                    ${canDelete ? `<button class="btn-danger-outline" onclick="deleteGroup('${group._id}')" style="margin-left: 10px;">Delete</button>` : ''}
-                </div>
             </div>
         </div>
     `}).join('');
 }
 
 async function deleteGroup(groupId) {
-    if (!confirm('Are you sure you want to delete this group? This action cannot be undone.')) {
-        return;
-    }
+    if (!confirm('Are you sure you want to delete this group?')) return;
 
     try {
         const response = await fetch(`${API_URL}/groups/${groupId}`, {
@@ -95,12 +99,12 @@ async function deleteGroup(groupId) {
             body: JSON.stringify({ userId: user.id }),
         });
 
-        const data = await response.json();
-
         if (response.ok) {
-            alert('Group deleted successfully!');
+            alert('Group deleted successfully');
             loadGroups();
+            loadSuggestedGroups();
         } else {
+            const data = await response.json();
             alert(data.message || 'Failed to delete group');
         }
     } catch (error) {
@@ -218,6 +222,14 @@ function formatDateTime(dateString) {
     return date.toLocaleString('en-US', {
         month: 'short',
         day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+function formatTime(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit'
     });

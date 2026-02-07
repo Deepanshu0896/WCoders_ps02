@@ -7,38 +7,36 @@ if (!user || !token) {
     window.location.href = 'login.html';
 }
 
-// Show Admin Panel link if user is admin
-if (user && user.isAdmin) {
-    const nav = document.querySelector('.sidebar-nav');
-    if (nav) {
-        const adminLink = document.createElement('a');
-        adminLink.href = 'admin.html';
-        adminLink.className = 'nav-item';
-        adminLink.innerHTML = '<span class="icon">🛡️</span> Admin Panel';
-        nav.appendChild(adminLink);
-    }
-}
-
 loadResources();
 
 async function loadResources(filters = {}) {
-    const queryParams = new URLSearchParams(filters).toString();
-
     try {
-        const response = await fetch(`${API_URL}/resources?${queryParams}`);
+        const queryParams = new URLSearchParams();
+        if (filters.type) queryParams.append('type', filters.type);
+        if (filters.available) queryParams.append('available', filters.available);
+
+        const queryString = queryParams.toString();
+        const url = queryString ? `${API_URL}/resources?${queryString}` : `${API_URL}/resources`;
+
+        const response = await fetch(url);
         const data = await response.json();
 
-        displayResources(data.resources);
+        if (data.success) {
+            displayResources(data.resources);
+        } else {
+            throw new Error(data.message);
+        }
     } catch (error) {
         console.error('Error loading resources:', error);
-        document.getElementById('resourcesList').innerHTML = '<p class="info-message">Error loading resources</p>';
+        document.getElementById('resourcesList').innerHTML =
+            '<p class="error-message">Failed to load resources</p>';
     }
 }
 
 function displayResources(resources) {
     const container = document.getElementById('resourcesList');
 
-    if (resources.length === 0) {
+    if (!resources || resources.length === 0) {
         container.innerHTML = '<p class="info-message">No resources found</p>';
         return;
     }
@@ -47,14 +45,15 @@ function displayResources(resources) {
         <div class="resource-card">
             <div class="resource-header">
                 <div class="resource-icon">${getResourceIcon(resource.type)}</div>
-                <span class="resource-badge ${resource.available ? 'badge-available' : 'badge-occupied'}">
+                <span class="badge ${resource.available ? 'badge-available' : 'badge-occupied'}">
                     ${resource.available ? 'Available' : 'Occupied'}
                 </span>
             </div>
-            <h3 class="resource-name">${resource.name}</h3>
+            <h3>${resource.name}</h3>
             <div class="resource-info">
-                <div>📊 Capacity: ${resource.capacity} people</div>
-                <div>🏷️ Type: ${formatResourceType(resource.type)}</div>
+                <div>📊 ${resource.capacity} people</div>
+                <div>🏷️ ${formatResourceType(resource.type)}</div>
+                <div>📍 ${resource.location}</div>
             </div>
             <button 
                 class="btn-book" 
@@ -88,51 +87,53 @@ function formatResourceType(type) {
 }
 
 async function bookResource(resourceId, resourceName) {
-    const startTime = new Date().toISOString();
-    const endTime = new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(); // 2 hours from now
-
     try {
+        const startTime = new Date();
+        const endTime = new Date(Date.now() + 2 * 60 * 60 * 1000);
+
         const response = await fetch(`${API_URL}/resources/book/${resourceId}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 userId: user.id,
-                startTime,
-                endTime
+                userName: user.name,
+                startTime: startTime.toISOString(),
+                endTime: endTime.toISOString(),
             }),
         });
 
         const data = await response.json();
 
-        if (response.ok) {
-            alert(`Successfully booked ${resourceName}!\n\nBooking time: 2 hours\nFrom: ${new Date(startTime).toLocaleTimeString()}\nTo: ${new Date(endTime).toLocaleTimeString()}`);
+        if (data.success) {
+            alert(`Booked ${resourceName}!\n\nTime: 2 hours\nFrom: ${startTime.toLocaleTimeString()}\nTo: ${endTime.toLocaleTimeString()}`);
             loadResources();
         } else {
-            alert(data.message || 'Failed to book resource');
+            alert(data.message || 'Booking failed');
         }
     } catch (error) {
-        console.error('Error booking resource:', error);
+        console.error('Error:', error);
         alert('Error booking resource');
     }
 }
 
 function applyResourceFilters() {
     const filters = {};
-
-    const type = document.getElementById('resourceTypeFilter').value;
-    const available = document.getElementById('availabilityFilter').value;
+    const type = document.getElementById('resourceTypeFilter')?.value;
+    const avail = document.getElementById('availabilityFilter')?.value;
 
     if (type) filters.type = type;
-    if (available) filters.available = available;
+    if (avail) filters.available = avail;
 
     loadResources(filters);
 }
 
 function clearResourceFilters() {
-    document.getElementById('resourceTypeFilter').value = '';
-    document.getElementById('availabilityFilter').value = '';
+    const typeFilter = document.getElementById('resourceTypeFilter');
+    const availFilter = document.getElementById('availabilityFilter');
+
+    if (typeFilter) typeFilter.value = '';
+    if (availFilter) availFilter.value = '';
+
     loadResources();
 }
 

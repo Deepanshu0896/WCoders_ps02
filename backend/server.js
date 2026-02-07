@@ -7,11 +7,8 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const groupRoutes = require('./routes/groups');
 const peerRoutes = require('./routes/peers');
-const resourceRoutes = require('./routes/resources');
 const adminRoutes = require('./routes/admin');
-const timetableRoutes = require('./routes/timetable');
-
-const path = require('path');
+const resourcesRoutes = require('./routes/resources');
 const app = express();
 
 // Connect to MongoDB
@@ -21,20 +18,15 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from frontend
-app.use(express.static(path.join(__dirname, '../frontend')));
-
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/peers', peerRoutes);
-app.use('/api/resources', resourceRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/timetable', timetableRoutes);
-
-// Serve index.html for root route
+app.use('/api/resources', resourcesRoutes);
+// Health check
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.json({ message: '✅ Resource & Peer Optimizer API is running!' });
 });
 
 // Start server
