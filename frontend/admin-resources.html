@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Resources - Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>👨‍💼 Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="admin.html" class="nav-item">
+                    <span class="icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="admin-resources.html" class="nav-item active">
+                    <span class="icon">📍</span>
+                    Manage Resources
+                </a>
+                <a href="admin-users.html" class="nav-item">
+                    <span class="icon">👥</span>
+                    Manage Users
+                </a>
+                <a href="admin-groups.html" class="nav-item">
+                    <span class="icon">🔍</span>
+                    Manage Groups
+                </a>
+                <a href="dashboard.html" class="nav-item">
+                    <span class="icon">👤</span>
+                    User View
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn-logout">Logout</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <h1>Manage Resources</h1>
+                <button onclick="showAddResourceModal()" class="btn-primary">+ Add Resource</button>
+            </header>
+
+            <!-- Resources Grid -->
+            <section class="admin-section">
+                <div id="resourcesGrid" class="resources-grid">
+                    <div class="loading">Loading resources...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add/Edit Resource Modal -->
+    <div id="resourceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Resource</h2>
+                <span class="close" onclick="closeResourceModal()">&times;</span>
+            </div>
+            <form id="resourceForm" class="modal-form">
+                <input type="hidden" id="resourceId">
+
+                <div class="form-group">
+                    <label for="resourceName">Resource Name *</label>
+                    <input type="text" id="resourceName" required placeholder="e.g., Library Room 204">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="resourceType">Type *</label>
+                        <select id="resourceType" required>
+                            <option value="">Select Type</option>
+                            <option value="study_room">Study Room</option>
+                            <option value="lab">Computer Lab</option>
+                            <option value="hall">Seminar Hall</option>
+                            <option value="sports">Sports Facility</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resourceCapacity">Capacity *</label>
+                        <input type="number" id="resourceCapacity" required min="1" placeholder="e.g., 8">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="resourceAvailable" checked>
+                        Available for booking
+                    </label>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" onclick="closeResourceModal()" class="btn-outline">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Resource</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin-resources.js"></script>
+</body>
+
+</html>

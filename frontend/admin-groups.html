@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Groups - Admin - PeerSync</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .group-id {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 0.25rem;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Admin Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>👨‍💼 Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="admin.html" class="nav-item">
+                    <span class="icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="admin-resources.html" class="nav-item">
+                    <span class="icon">📍</span>
+                    Manage Resources
+                </a>
+                <a href="admin-users.html" class="nav-item">
+                    <span class="icon">👥</span>
+                    Manage Users
+                </a>
+                <a href="admin-groups.html" class="nav-item active">
+                    <span class="icon">🔍</span>
+                    Manage Groups
+                </a>
+                <a href="dashboard.html" class="nav-item">
+                    <span class="icon">👤</span>
+                    User View
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn-logout">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1>Manage Groups</h1>
+                <div class="admin-badge">Administrator</div>
+            </header>
+
+            <section class="admin-section">
+                <!-- <div class="admin-actions">
+                    <input type="text" id="searchGroups" placeholder="Search groups..." class="search-input">
+                </div> -->
+
+                <h2 style="margin: 2rem 0 1rem 2rem;">Active Groups (<span id="totalGroupsCount">0</span>)</h2>
+
+                <div class="groups-section">
+                    <div id="groupsGrid" class="groups-grid">
+                        <div class="loading">Loading groups...</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/admin-groups.js"></script>
+</body>
+

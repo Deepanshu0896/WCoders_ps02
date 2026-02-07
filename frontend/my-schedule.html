@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Schedule - PeerSync</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 PeerSync</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <span class="icon">🏠</span>
+                    Dashboard
+                </a>
+                <a href="groups.html" class="nav-item">
+                    <span class="icon">👥</span>
+                    Groups
+                </a>
+                <a href="peers.html" class="nav-item">
+                    <span class="icon">🔍</span>
+                    Find Peers
+                </a>
+                <a href="resources.html" class="nav-item">
+                    <span class="icon">📍</span>
+                    Resources
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <span class="icon">⚙️</span>
+                    Settings
+                </a>
+                <a href="my-schedule.html" class="nav-item active">
+                    <span class="icon">📅</span>
+                    My Schedule
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn-logout">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1>My Schedule</h1>
+            </header>
+
+            <!-- Timetable Section -->
+            <section class="schedule-section">
+                <div class="schedule-card">
+                    <h2>📚 Class Timetable</h2>
+                    <p>Add your class schedule to find free time automatically</p>
+
+                    <div id="classSlots" class="time-slots-container">
+                        <!-- Slots will be added here -->
+                    </div>
+
+                    <button onclick="addClassSlot()" class="btn-outline">+ Add Class</button>
+                    <button onclick="saveTimetable()" class="btn-primary">Save Timetable</button>
+                </div>
+
+                <!-- Free Time Display -->
+                <div class="schedule-card">
+                    <h2>⏰ Today's Free Time</h2>
+                    <div id="freeSlotsDisplay" class="free-slots-display">
+                        <p class="info-message">Add your class schedule to see free time slots</p>
+                    </div>
+                </div>
+
+                <!-- Manual Free Time -->
+                <div class="schedule-card">
+                    <h2>✋ Manually Mark Free Time</h2>
+                    <p>Mark specific times when you're available to meet peers</p>
+
+                    <div id="freeSlots" class="time-slots-container">
+                        <!-- Free slots will be added here -->
+                    </div>
+
+                    <button onclick="addFreeSlot()" class="btn-outline">+ Add Free Time</button>
+                    <button onclick="saveFreeTime()" class="btn-primary">Save Free Time</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+
+        let classSlotCounter = 0;
+        let freeSlotCounter = 0;
+
+        // Load existing timetable
+        loadTimetable();
+        loadFreeTime();
+
+        function loadTimetable() {
+            const timetable = JSON.parse(localStorage.getItem(`timetable_${user.id}`)) || [];
+
+            document.getElementById('classSlots').innerHTML = '';
+
+            if (timetable.length > 0) {
+                timetable.forEach((slot, index) => {
+                    addClassSlot(slot);
+                });
+                calculateFreeTime();
+            } else {
+                addClassSlot(); // Add one empty slot
+            }
+        }
+
+        function loadFreeTime() {
+            const freeTime = JSON.parse(localStorage.getItem(`freetime_${user.id}`)) || [];
+
+            document.getElementById('freeSlots').innerHTML = '';
+
+            if (freeTime.length > 0) {
+                freeTime.forEach(slot => {
+                    addFreeSlot(slot);
+                });
+            } else {
+                addFreeSlot(); // Add one empty slot
+            }
+        }
+
+        function addClassSlot(data = null) {
+            const slotId = classSlotCounter++;
+            const container = document.getElementById('classSlots');
+
+            const slotHtml = `
+                <div class="time-slot" id="class-slot-${slotId}">
+                    <div class="slot-header">
+                        <h4>Class ${slotId + 1}</h4>
+                        <button type="button" onclick="removeSlot('class-slot-${slotId}')" class="btn-icon btn-danger">🗑️</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Day</label>
+                            <select name="day-${slotId}" required>
+                                <option value="Monday" ${data?.day === 'Monday' ? 'selected' : ''}>Monday</option>
+                                <option value="Tuesday" ${data?.day === 'Tuesday' ? 'selected' : ''}>Tuesday</option>
+                                <option value="Wednesday" ${data?.day === 'Wednesday' ? 'selected' : ''}>Wednesday</option>
+                                <option value="Thursday" ${data?.day === 'Thursday' ? 'selected' : ''}>Thursday</option>
+                                <option value="Friday" ${data?.day === 'Friday' ? 'selected' : ''}>Friday</option>
+                                <option value="Saturday" ${data?.day === 'Saturday' ? 'selected' : ''}>Saturday</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Start Time</label>
+                            <input type="time" name="startTime-${slotId}" value="${data?.startTime || ''}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>End Time</label>
+                            <input type="time" name="endTime-${slotId}" value="${data?.endTime || ''}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <input type="text" name="subject-${slotId}" value="${data?.subject || ''}" placeholder="e.g., Data Structures" required>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', slotHtml);
+        }
+
+        function addFreeSlot(data = null) {
+            const slotId = freeSlotCounter++;
+            const container = document.getElementById('freeSlots');
+
+            const slotHtml = `
+                <div class="time-slot" id="free-slot-${slotId}">
+                    <div class="slot-header">
+                        <h4>Free Time ${slotId + 1}</h4>
+                        <button type="button" onclick="removeSlot('free-slot-${slotId}')" class="btn-icon btn-danger">🗑️</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Day</label>
+                            <select name="free-day-${slotId}" required>
+                                <option value="Monday" ${data?.day === 'Monday' ? 'selected' : ''}>Monday</option>
+                                <option value="Tuesday" ${data?.day === 'Tuesday' ? 'selected' : ''}>Tuesday</option>
+                                <option value="Wednesday" ${data?.day === 'Wednesday' ? 'selected' : ''}>Wednesday</option>
+                                <option value="Thursday" ${data?.day === 'Thursday' ? 'selected' : ''}>Thursday</option>
+                                <option value="Friday" ${data?.day === 'Friday' ? 'selected' : ''}>Friday</option>
+                                <option value="Saturday" ${data?.day === 'Saturday' ? 'selected' : ''}>Saturday</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Start Time</label>
+                            <input type="time" name="free-startTime-${slotId}" value="${data?.startTime || ''}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>End Time</label>
+                            <input type="time" name="free-endTime-${slotId}" value="${data?.endTime || ''}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Activity (optional)</label>
+                            <input type="text" name="free-activity-${slotId}" value="${data?.activity || ''}" placeholder="e.g., Study, Project">
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', slotHtml);
+        }
+
+        function removeSlot(slotId) {
+            document.getElementById(slotId).remove();
+        }
+
+        function saveTimetable() {
+            const slots = [];
+
+            document.querySelectorAll('#classSlots .time-slot').forEach(slot => {
+                const slotId = slot.id.split('-')[2];
+                const day = slot.querySelector(`[name="day-${slotId}"]`)?.value;
+                const startTime = slot.querySelector(`[name="startTime-${slotId}"]`)?.value;
+                const endTime = slot.querySelector(`[name="endTime-${slotId}"]`)?.value;
+                const subject = slot.querySelector(`[name="subject-${slotId}"]`)?.value;
+
+                if (day && startTime && endTime && subject) {
+                    slots.push({ day, startTime, endTime, subject });
+                }
+            });
+
+            if (slots.length === 0) {
+                alert('Please add at least one class slot');
+                return;
+            }
+
+            localStorage.setItem(`timetable_${user.id}`, JSON.stringify(slots));
+            alert('Timetable saved successfully!');
+
+            calculateFreeTime();
+        }
+
+        function saveFreeTime() {
+            const slots = [];
+
+            document.querySelectorAll('#freeSlots .time-slot').forEach(slot => {
+                const slotId = slot.id.split('-')[2];
+                const day = slot.querySelector(`[name="free-day-${slotId}"]`)?.value;
+                const startTime = slot.querySelector(`[name="free-startTime-${slotId}"]`)?.value;
+                const endTime = slot.querySelector(`[name="free-endTime-${slotId}"]`)?.value;
+                const activity = slot.querySelector(`[name="free-activity-${slotId}"]`)?.value;
+
+                if (day && startTime && endTime) {
+                    slots.push({ day, startTime, endTime, activity });
+                }
+            });
+
+            localStorage.setItem(`freetime_${user.id}`, JSON.stringify(slots));
+            alert('Free time saved successfully!');
+        }
+
+        function calculateFreeTime() {
+            const timetable = JSON.parse(localStorage.getItem(`timetable_${user.id}`)) || [];
+            const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+
+            const todayClasses = timetable.filter(slot => slot.day === today)
+                .sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+            const display = document.getElementById('freeSlotsDisplay');
+
+            if (todayClasses.length === 0) {
+                display.innerHTML = '<p class="success-message">🎉 No classes today! You\'re free all day!</p>';
+                return;
+            }
+
+            let freeSlots = [];
+            const dayStart = '08:00';
+            const dayEnd = '18:00';
+
+            // Free time before first class
+            if (todayClasses[0].startTime > dayStart) {
+                freeSlots.push({
+                    start: dayStart,
+                    end: todayClasses[0].startTime
+                });
+            }
+
+            // Free time between classes
+            for (let i = 0; i < todayClasses.length - 1; i++) {
+                if (todayClasses[i].endTime < todayClasses[i + 1].startTime) {
+                    freeSlots.push({
+                        start: todayClasses[i].endTime,
+                        end: todayClasses[i + 1].startTime
+                    });
+                }
+            }
+
+            // Free time after last class
+            if (todayClasses[todayClasses.length - 1].endTime < dayEnd) {
+                freeSlots.push({
+                    start: todayClasses[todayClasses.length - 1].endTime,
+                    end: dayEnd
+                });
+            }
+
+            if (freeSlots.length === 0) {
+                display.innerHTML = '<p class="warning-message">⚠️ No free time slots today - back-to-back classes!</p>';
+            } else {
+                display.innerHTML = '<div class="free-slots-list">' +
+                    freeSlots.map(slot => `
+                        <div class="free-slot-item">
+                            <span class="time-badge">🕐 ${slot.start} - ${slot.end}</span>
+                            <span class="duration">${calculateDuration(slot.start, slot.end)}</span>
+                        </div>
+                    `).join('') +
+                    '</div>';
+            }
+        }
+
+        function calculateDuration(start, end) {
+            const [startHour, startMin] = start.split(':').map(Number);
+            const [endHour, endMin] = end.split(':').map(Number);
+
+            const startMinutes = startHour * 60 + startMin;
+            const endMinutes = endHour * 60 + endMin;
+            const duration = endMinutes - startMinutes;
+
+            const hours = Math.floor(duration / 60);
+            const minutes = duration % 60;
+
+            if (hours > 0 && minutes > 0) {
+                return `${hours}h ${minutes}m`;
+            } else if (hours > 0) {
+                return `${hours}h`;
+            } else {
+                return `${minutes}m`;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+
+</html>

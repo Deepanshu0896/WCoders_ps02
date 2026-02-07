@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - PeerSync</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Admin Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>👨‍💼 Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+    <a href="admin.html" class="nav-item active">
+        <span class="icon">📊</span>
+        Dashboard
+    </a>
+    <a href="admin-resources.html" class="nav-item">
+        <span class="icon">📍</span>
+        Manage Resources
+    </a>
+    <a href="admin-users.html" class="nav-item">
+        <span class="icon">👥</span>
+        Manage Users
+    </a>
+    <a href="admin-groups.html" class="nav-item">
+        <span class="icon">🔍</span>
+        Manage Groups
+    </a>
+    <a href="dashboard.html" class="nav-item">
+        <span class="icon">👤</span>
+        User View
+    </a>
+</nav>
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn-logout">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1>Admin Dashboard</h1>
+                <div class="admin-badge">Administrator</div>
+            </header>
+
+            <!-- Stats Overview -->
+            <section class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <h3 id="totalUsers">0</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-content">
+                        <h3 id="totalGroups">0</h3>
+                        <p>Active Groups</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📍</div>
+                    <div class="stat-content">
+                        <h3 id="totalResources">0</h3>
+                        <p>Resources</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-content">
+                        <h3 id="totalBookings">0</h3>
+                        <p>Bookings Today</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+<section class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="action-buttons">
+        <a href="admin-resources.html" class="action-card">
+            <span class="action-icon">➕</span>
+            <h3>Add Resource</h3>
+            <p>Create new campus resource</p>
+        </a>
+        <a href="admin-users.html" class="action-card">
+            <span class="action-icon">👤</span>
+            <h3>Manage Users</h3>
+            <p>View and edit user accounts</p>
+        </a>
+        <a href="admin-groups.html" class="action-card">
+            <span class="action-icon">👥</span>
+            <h3>View Groups</h3>
+            <p>Monitor active study groups</p>
+        </a>
+        <!-- REMOVED AI CONFIGURATION CARD -->
+    </div>
+</section>
+
+            <!-- Recent Activity -->
+            <section class="admin-activity">
+                <h2>Recent Activity</h2>
+                <div id="activityLog" class="activity-list">
+                    <div class="loading">Loading activity...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

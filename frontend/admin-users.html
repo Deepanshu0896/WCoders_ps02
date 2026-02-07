@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>👨‍💼 Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+    <a href="admin.html" class="nav-item active">
+        <span class="icon">📊</span>
+        Dashboard
+    </a>
+    <a href="admin-resources.html" class="nav-item">
+        <span class="icon">📍</span>
+        Manage Resources
+    </a>
+    <a href="admin-users.html" class="nav-item">
+        <span class="icon">👥</span>
+        Manage Users
+    </a>
+    <a href="admin-groups.html" class="nav-item">
+        <span class="icon">🔍</span>
+        Manage Groups
+    </a>
+    <!-- REMOVED AI SETTINGS LINK -->
+    <a href="dashboard.html" class="nav-item">
+        <span class="icon">👤</span>
+        User View
+    </a>
+</nav>
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn-logout">Logout</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <h1>Manage Users</h1>
+                <div class="search-bar">
+                    <input type="text" id="userSearch" placeholder="🔍 Search users..." onkeyup="searchUsers()">
+                </div>
+            </header>
+
+            <!-- Filters -->
+            <section class="filters-section">
+                <div class="filters">
+                    <select id="branchFilter" class="filter-select" onchange="filterUsers()">
+                        <option value="">All Branches</option>
+                        <option value="CSE">CSE</option>
+                        <option value="ECE">ECE</option>
+                        <option value="ME">ME</option>
+                        <option value="CE">CE</option>
+                        <option value="EE">EE</option>
+                        <option value="IT">IT</option>
+                    </select>
+
+                    <select id="yearFilter" class="filter-select" onchange="filterUsers()">
+                        <option value="">All Years</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+
+                    <button onclick="clearUserFilters()" class="btn-outline">Clear Filters</button>
+                </div>
+            </section>
+
+            <!-- Users Table -->
+            <section class="admin-section">
+                <div class="table-container">
+                    <table class="admin-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Branch</th>
+                                <th>Year</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="7" class="loading">Loading users...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>User Details</h2>
+                <span class="close" onclick="closeUserModal()">&times;</span>
+            </div>
+            <div id="userDetails" class="user-details">
+                <!-- User details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Timetable Upload Modal -->
+    <div id="timetableModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Upload Timetable</h2>
+                <span class="close" onclick="closeTimetableModal()">&times;</span>
+            </div>
+            <form id="timetableForm" class="modal-form">
+                <input type="hidden" id="timetableUserId">
+                
+                <div class="form-group">
+                    <label>Add Time Slots</label>
+                    <div id="timeSlots">
+                        <!-- Time slots will be added here -->
+                    </div>
+                    <button type="button" onclick="addTimeSlot()" class="btn-outline">+ Add Slot</button>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" onclick="closeTimetableModal()" class="btn-outline">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Timetable</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin-users.js"></script>
+</body>
+</html>

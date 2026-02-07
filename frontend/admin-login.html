@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - PeerSync</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>👨‍💼 Admin Panel</h1>
+                <h2>Administrator Login</h2>
+            </div>
+
+
+            <form id="adminLoginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Admin Email</label>
+                    <input type="email" id="email" placeholder="admin@peersync.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+
+                <div id="errorMessage" class="error-message"></div>
+
+                <button type="submit" class="btn-submit">Login as Admin</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Not an admin? <a href="login.html">User Login</a></p>
+                <p><a href="index.html">← Back to Home</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verifying...';
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Check if user is admin
+                    if (!data.user.isAdmin) {
+                        showError('Access Denied: You are not an administrator');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Login as Admin';
+                        return;
+                    }
+
+                    // Save token and user data
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('isAdmin', 'true');
+
+                    // Redirect to admin panel
+                    window.location.href = 'admin.html';
+                } else {
+                    showError(data.message || 'Login failed');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login as Admin';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Cannot connect to server. Make sure backend is running.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login as Admin';
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+
+</html>

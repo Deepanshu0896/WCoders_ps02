@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - PeerSync</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 PeerSync</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <span class="icon">🏠</span>
+                    Dashboard
+                </a>
+                <a href="groups.html" class="nav-item">
+                    <span class="icon">👥</span>
+                    Groups
+                </a>
+                <a href="peers.html" class="nav-item">
+                    <span class="icon">🔍</span>
+                    Find Peers
+                </a>
+                <a href="resources.html" class="nav-item">
+                    <span class="icon">📍</span>
+                    Resources
+                </a>
+                <a href="settings.html" class="nav-item active">
+                    <span class="icon">⚙️</span>
+                    Settings
+                </a>
+                <a href="my-schedule.html" class="nav-item">
+                    <span class="icon">📅</span>
+                    My Schedule
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn-logout">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1>Settings</h1>
+            </header>
+
+            <!-- Settings Sections -->
+            <section class="settings-section">
+                <!-- Profile Settings -->
+                <div class="settings-card">
+                    <h2 class="settings-title">👤 Profile Information</h2>
+                    <form id="profileForm" class="settings-form">
+                        <div class="form-group">
+                            <label for="profileName">Full Name</label>
+                            <input type="text" id="profileName" placeholder="Your Name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profileEmail">Email</label>
+                            <input type="email" id="profileEmail" placeholder="your@email.com" disabled>
+                            <small style="color: #6b7280;">Email cannot be changed</small>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profileBranch">Branch</label>
+                                <select id="profileBranch">
+                                    <option value="CSE">Computer Science</option>
+                                    <option value="ECE">Electronics</option>
+                                    <option value="ME">Mechanical</option>
+                                    <option value="CE">Civil</option>
+                                    <option value="EE">Electrical</option>
+                                    <option value="IT">IT</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="profileYear">Year</label>
+                                <select id="profileYear">
+                                    <option value="1">1st Year</option>
+                                    <option value="2">2nd Year</option>
+                                    <option value="3">3rd Year</option>
+                                    <option value="4">4th Year</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profileSkills">Skills (comma-separated)</label>
+                            <input type="text" id="profileSkills" placeholder="Python, DSA, Web Development">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profileInterests">Interests (comma-separated)</label>
+                            <input type="text" id="profileInterests" placeholder="AI/ML, Competitive Programming">
+                        </div>
+
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                    </form>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="settings-card">
+                    <h2 class="settings-title">🔔 Notification Preferences</h2>
+                    <div class="settings-options">
+                        <div class="setting-item">
+                            <div>
+                                <strong>Group Invitations</strong>
+                                <p>Receive notifications when someone invites you to a group</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="notifGroupInvites" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div>
+                                <strong>New Group Alerts</strong>
+                                <p>Get notified when new groups matching your interests are created</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="notifNewGroups" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div>
+                                <strong>Peer Suggestions</strong>
+                                <p>Receive AI-powered peer matching suggestions</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="notifPeerSuggestions" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div>
+                                <strong>Resource Availability</strong>
+                                <p>Get notified when preferred resources become available</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="notifResources">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Settings -->
+                <div class="settings-card">
+                    <h2 class="settings-title">🔒 Privacy Settings</h2>
+                    <div class="settings-options">
+                        <div class="setting-item">
+                            <div>
+                                <strong>Profile Visibility</strong>
+                                <p>Allow other users to see your profile in peer search</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="privacyProfileVisible" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div>
+                                <strong>Show Online Status</strong>
+                                <p>Let others see when you're available</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="privacyOnlineStatus" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div>
+                                <strong>Location Sharing</strong>
+                                <p>Share your current campus location with peers</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="privacyLocation">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Actions -->
+                <div class="settings-card">
+                    <h2 class="settings-title">⚡ Account Actions</h2>
+                    <div class="account-actions">
+                        <button onclick="changePassword()" class="btn-outline">Change Password</button>
+                        <button onclick="clearData()" class="btn-outline">Clear All Data</button>
+                        <button onclick="deleteAccount()" class="btn-danger">Delete Account</button>
+                    </div>
+                </div>
+
+                <!-- About -->
+                <div class="settings-card">
+                    <h2 class="settings-title">ℹ️ About</h2>
+                    <div class="about-info">
+                        <p><strong>Version:</strong> 1.0.0</p>
+                        <p><strong>Built for:</strong> GFG HackOvation 2026</p>
+                        <p><strong>Team:</strong> Your Team Name</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/settings.js"></script>
+</body>
+
+</html>
