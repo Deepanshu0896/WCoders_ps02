@@ -15,7 +15,7 @@ document.getElementById('userName').textContent = user.name;
 const availabilityToggle = document.getElementById('availabilityToggle');
 availabilityToggle.addEventListener('change', async (e) => {
     const isAvailable = e.target.checked;
-    
+
     try {
         const response = await fetch(`${API_URL}/peers/availability/${user.id}`, {
             method: 'PUT',
@@ -39,7 +39,7 @@ async function loadDashboardData() {
     try {
         const response = await fetch(`${API_URL}/peers/free-now/${user.id}`);
         const data = await response.json();
-        
+
         const statusElement = document.getElementById('freeTimeStatus');
         if (data.isFree) {
             statusElement.textContent = `Free until ${data.freeUntil}`;
@@ -56,7 +56,7 @@ async function loadDashboardData() {
     try {
         const response = await fetch(`${API_URL}/peers/available?currentUserId=${user.id}`);
         const data = await response.json();
-        
+
         document.getElementById('availablePeers').textContent = data.count;
     } catch (error) {
         console.error('Error fetching peers:', error);
@@ -66,7 +66,7 @@ async function loadDashboardData() {
     try {
         const response = await fetch(`${API_URL}/groups/my-groups/${user.id}`);
         const data = await response.json();
-        
+
         document.getElementById('activeGroups').textContent = data.count;
         displayUpcomingGroups(data.groups);
     } catch (error) {
@@ -76,7 +76,7 @@ async function loadDashboardData() {
 
 function displayUpcomingGroups(groups) {
     const container = document.getElementById('upcomingGroups');
-    
+
     if (groups.length === 0) {
         container.innerHTML = '<p class="info-message">No upcoming groups. Create one or join existing groups!</p>';
         return;
@@ -110,26 +110,26 @@ function formatActivityType(type) {
 
 function formatDateTime(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleString('en-US', { 
-        month: 'short', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit' 
+    return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
     });
 }
 
 function formatTime(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
+    return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
     });
 }
 
 function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 // Load data on page load

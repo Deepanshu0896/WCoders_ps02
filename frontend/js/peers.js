@@ -12,11 +12,11 @@ loadPeers();
 async function loadPeers(filters = {}) {
     filters.currentUserId = user.id; // Exclude current user
     const queryParams = new URLSearchParams(filters).toString();
-    
+
     try {
         const response = await fetch(`${API_URL}/peers/available?${queryParams}`);
         const data = await response.json();
-        
+
         displayPeers(data.peers);
     } catch (error) {
         console.error('Error loading peers:', error);
@@ -26,7 +26,7 @@ async function loadPeers(filters = {}) {
 
 function displayPeers(peers) {
     const container = document.getElementById('peersList');
-    
+
     if (peers.length === 0) {
         container.innerHTML = '<p class="info-message">No peers available right now. Check back later!</p>';
         return;
@@ -57,15 +57,15 @@ function invitePeer(peerId, peerName) {
 
 function applyPeerFilters() {
     const filters = {};
-    
+
     const branch = document.getElementById('branchFilter').value;
     const year = document.getElementById('yearFilter').value;
     const search = document.getElementById('searchPeer').value;
-    
+
     if (branch) filters.branch = branch;
     if (year) filters.year = year;
     // Search would require backend modification to support name search
-    
+
     loadPeers(filters);
 }
 
@@ -79,5 +79,5 @@ function clearPeerFilters() {
 function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }

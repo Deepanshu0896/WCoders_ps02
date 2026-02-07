@@ -141,7 +141,6 @@ function getActivityIcon(type) {
 
 function logout() {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
     localStorage.removeItem('isAdmin');
     window.location.href = 'index.html';
 }

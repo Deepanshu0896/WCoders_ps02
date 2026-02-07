@@ -14,11 +14,11 @@ if (document.getElementById('groupsList')) {
 
 async function loadGroups(filters = {}) {
     const queryParams = new URLSearchParams(filters).toString();
-    
+
     try {
         const response = await fetch(`${API_URL}/groups/browse?${queryParams}`);
         const data = await response.json();
-        
+
         displayGroups(data.groups);
     } catch (error) {
         console.error('Error loading groups:', error);
@@ -28,7 +28,7 @@ async function loadGroups(filters = {}) {
 
 function displayGroups(groups) {
     const container = document.getElementById('groupsList');
-    
+
     if (groups.length === 0) {
         container.innerHTML = '<p class="info-message">No groups found. Be the first to create one!</p>';
         return;
@@ -49,12 +49,12 @@ function displayGroups(groups) {
             </div>
             <div class="group-footer">
                 <span class="members-count">👥 ${group.members.length}/${group.maxMembers} members</span>
-                ${group.members.length < group.maxMembers && !group.members.some(m => m._id === user.id) 
-                    ? `<button class="btn-join" onclick="joinGroup('${group._id}')">Join Group</button>` 
-                    : group.members.some(m => m._id === user.id)
-                    ? `<button class="btn-join" style="background: var(--secondary-color);" disabled>Joined ✓</button>`
-                    : `<button class="btn-join" disabled>Full</button>`
-                }
+                ${group.members.length < group.maxMembers && !group.members.some(m => m._id === user.id)
+            ? `<button class="btn-join" onclick="joinGroup('${group._id}')">Join Group</button>`
+            : group.members.some(m => m._id === user.id)
+                ? `<button class="btn-join" style="background: var(--secondary-color);" disabled>Joined ✓</button>`
+                : `<button class="btn-join" disabled>Full</button>`
+        }
             </div>
         </div>
     `).join('');
@@ -86,15 +86,15 @@ async function joinGroup(groupId) {
 
 function applyFilters() {
     const filters = {};
-    
+
     const activityType = document.getElementById('activityTypeFilter').value;
     const subject = document.getElementById('subjectFilter').value;
     const location = document.getElementById('locationFilter').value;
-    
+
     if (activityType) filters.activityType = activityType;
     if (subject) filters.subject = subject;
     if (location) filters.location = location;
-    
+
     loadGroups(filters);
 }
 
@@ -115,7 +115,7 @@ if (document.getElementById('createGroupForm')) {
 
     document.getElementById('createGroupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const groupData = {
             title: document.getElementById('title').value,
             description: document.getElementById('description').value,
@@ -166,11 +166,11 @@ function formatActivityType(type) {
 
 function formatDateTime(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleString('en-US', { 
-        month: 'short', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit' 
+    return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
     });
 }
 
@@ -178,7 +178,7 @@ function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
     errorDiv.textContent = message;
     errorDiv.classList.add('show');
-    
+
     setTimeout(() => {
         errorDiv.classList.remove('show');
     }, 5000);
@@ -187,5 +187,5 @@ function showError(message) {
 function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }

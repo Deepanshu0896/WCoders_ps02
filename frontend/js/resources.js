@@ -11,11 +11,11 @@ loadResources();
 
 async function loadResources(filters = {}) {
     const queryParams = new URLSearchParams(filters).toString();
-    
+
     try {
         const response = await fetch(`${API_URL}/resources?${queryParams}`);
         const data = await response.json();
-        
+
         displayResources(data.resources);
     } catch (error) {
         console.error('Error loading resources:', error);
@@ -25,7 +25,7 @@ async function loadResources(filters = {}) {
 
 function displayResources(resources) {
     const container = document.getElementById('resourcesList');
-    
+
     if (resources.length === 0) {
         container.innerHTML = '<p class="info-message">No resources found</p>';
         return;
@@ -78,7 +78,7 @@ function formatResourceType(type) {
 async function bookResource(resourceId, resourceName) {
     const startTime = new Date().toISOString();
     const endTime = new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(); // 2 hours from now
-    
+
     try {
         const response = await fetch(`${API_URL}/resources/book/${resourceId}`, {
             method: 'POST',
@@ -108,13 +108,13 @@ async function bookResource(resourceId, resourceName) {
 
 function applyResourceFilters() {
     const filters = {};
-    
+
     const type = document.getElementById('resourceTypeFilter').value;
     const available = document.getElementById('availabilityFilter').value;
-    
+
     if (type) filters.type = type;
     if (available) filters.available = available;
-    
+
     loadResources(filters);
 }
 
@@ -127,5 +127,5 @@ function clearResourceFilters() {
 function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }

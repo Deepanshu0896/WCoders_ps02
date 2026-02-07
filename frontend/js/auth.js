@@ -5,15 +5,15 @@ console.log('auth.js loaded');
 // Register Form Handler
 if (document.getElementById('registerForm')) {
     console.log('Register form found');
-    
+
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         console.log('Register form submitted');
-        
+
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Creating Account...';
-        
+
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
@@ -21,7 +21,7 @@ if (document.getElementById('registerForm')) {
         const year = parseInt(document.getElementById('year').value);
         const skillsInput = document.getElementById('skills').value.trim();
         const interestsInput = document.getElementById('interests').value.trim();
-        
+
         const skills = skillsInput ? skillsInput.split(',').map(s => s.trim()).filter(Boolean) : [];
         const interests = interestsInput ? interestsInput.split(',').map(s => s.trim()).filter(Boolean) : [];
 
@@ -29,20 +29,20 @@ if (document.getElementById('registerForm')) {
 
         try {
             console.log('Sending request to:', `${API_URL}/auth/register`);
-            
+
             const response = await fetch(`${API_URL}/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
-                    name, 
-                    email, 
-                    password, 
-                    branch, 
-                    year, 
-                    skills, 
-                    interests 
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password,
+                    branch,
+                    year,
+                    skills,
+                    interests
                 }),
             });
 
@@ -54,9 +54,9 @@ if (document.getElementById('registerForm')) {
                 // Save token and user data
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                
+
                 showSuccess('Account created successfully! Redirecting...');
-                
+
                 // Redirect to dashboard after 1 second
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
@@ -78,15 +78,15 @@ if (document.getElementById('registerForm')) {
 // Login Form Handler
 if (document.getElementById('loginForm')) {
     console.log('Login form found');
-    
+
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         console.log('Login form submitted');
-        
+
         const submitBtn = e.target.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Logging in...';
-        
+
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
 
@@ -94,7 +94,7 @@ if (document.getElementById('loginForm')) {
 
         try {
             console.log('Sending request to:', `${API_URL}/auth/login`);
-            
+
             const response = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
@@ -111,9 +111,9 @@ if (document.getElementById('loginForm')) {
                 // Save token and user data
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                
+
                 showSuccess('Login successful! Redirecting...');
-                
+
                 // Redirect to dashboard after 1 second
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
@@ -135,17 +135,17 @@ if (document.getElementById('loginForm')) {
 function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
     const successDiv = document.getElementById('successMessage');
-    
+
     if (errorDiv) {
         errorDiv.textContent = message;
         errorDiv.style.display = 'block';
         errorDiv.classList.add('show');
     }
-    
+
     if (successDiv) {
         successDiv.style.display = 'none';
     }
-    
+
     setTimeout(() => {
         if (errorDiv) {
             errorDiv.style.display = 'none';
@@ -157,12 +157,12 @@ function showError(message) {
 function showSuccess(message) {
     const errorDiv = document.getElementById('errorMessage');
     const successDiv = document.getElementById('successMessage');
-    
+
     if (successDiv) {
         successDiv.textContent = message;
         successDiv.style.display = 'block';
     }
-    
+
     if (errorDiv) {
         errorDiv.style.display = 'none';
     }
@@ -171,5 +171,5 @@ function showSuccess(message) {
 function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
