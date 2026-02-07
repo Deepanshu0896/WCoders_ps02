@@ -165,8 +165,8 @@
             const slotHtml = `
                 <div class="time-slot" id="class-slot-${slotId}">
                     <div class="slot-header">
-                        <h4>Class ${slotId + 1}</h4>
-                        <button type="button" onclick="removeSlot('class-slot-${slotId}')" class="btn-icon btn-danger">🗑️</button>
+                        <h4>Class</h4> <!-- Number will be set by renumberClassSlots -->
+                        <button type="button" onclick="removeClassSlot('class-slot-${slotId}')" class="btn-icon btn-danger">🗑️</button>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -200,6 +200,7 @@
             `;
 
             container.insertAdjacentHTML('beforeend', slotHtml);
+            renumberClassSlots();
         }
 
         function addFreeSlot(data = null) {
@@ -209,8 +210,8 @@
             const slotHtml = `
                 <div class="time-slot" id="free-slot-${slotId}">
                     <div class="slot-header">
-                        <h4>Free Time ${slotId + 1}</h4>
-                        <button type="button" onclick="removeSlot('free-slot-${slotId}')" class="btn-icon btn-danger">🗑️</button>
+                        <h4>Free Time</h4> <!-- Number will be set by renumberFreeSlots -->
+                        <button type="button" onclick="removeFreeSlot('free-slot-${slotId}')" class="btn-icon btn-danger">🗑️</button>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -244,10 +245,31 @@
             `;
 
             container.insertAdjacentHTML('beforeend', slotHtml);
+            renumberFreeSlots();
         }
 
-        function removeSlot(slotId) {
+        function removeClassSlot(slotId) {
             document.getElementById(slotId).remove();
+            renumberClassSlots();
+        }
+
+        function removeFreeSlot(slotId) {
+            document.getElementById(slotId).remove();
+            renumberFreeSlots();
+        }
+
+        function renumberClassSlots() {
+            const slots = document.querySelectorAll('#classSlots .time-slot');
+            slots.forEach((slot, index) => {
+                slot.querySelector('.slot-header h4').textContent = `Class ${index + 1}`;
+            });
+        }
+
+        function renumberFreeSlots() {
+            const slots = document.querySelectorAll('#freeSlots .time-slot');
+            slots.forEach((slot, index) => {
+                slot.querySelector('.slot-header h4').textContent = `Free Time ${index + 1}`;
+            });
         }
 
         async function saveTimetable() {
