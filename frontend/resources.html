@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - PeerSync</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 PeerSync</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <span class="icon">🏠</span>
+                    Dashboard
+                </a>
+                <a href="groups.html" class="nav-item">
+                    <span class="icon">👥</span>
+                    Groups
+                </a>
+                <a href="peers.html" class="nav-item">
+                    <span class="icon">🔍</span>
+                    Find Peers
+                </a>
+                <a href="resources.html" class="nav-item active">
+                    <span class="icon">📍</span>
+                    Resources
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <span class="icon">⚙️</span>
+                    Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn-logout">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h1>Campus Resources</h1>
+            </header>
+
+            <!-- Filters -->
+            <section class="filters-section">
+                <div class="filters">
+                    <select id="resourceTypeFilter" class="filter-select">
+                        <option value="">All Types</option>
+                        <option value="study_room">Study Rooms</option>
+                        <option value="lab">Computer Labs</option>
+                        <option value="hall">Seminar Halls</option>
+                        <option value="sports">Sports Facilities</option>
+                    </select>
+
+                    <select id="availabilityFilter" class="filter-select">
+                        <option value="">All</option>
+                        <option value="true">Available Now</option>
+                        <option value="false">Occupied</option>
+                    </select>
+
+                    <button onclick="applyResourceFilters()" class="btn-primary">Apply Filters</button>
+                    <button onclick="clearResourceFilters()" class="btn-outline">Clear</button>
+                </div>
+            </section>
+
+            <!-- Resources Grid -->
+            <section class="resources-section">
+                <div id="resourcesList" class="resources-grid">
+                    <div class="loading">Loading resources...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/resources.js"></script>
+</body>
+</html>
