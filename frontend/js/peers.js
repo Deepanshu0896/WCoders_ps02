@@ -50,9 +50,95 @@ function getInitials(name) {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 }
 
-function invitePeer(peerId, peerName) {
-    alert(`Invite feature coming soon! You selected ${peerName}`);
-    // In a full implementation, this would open a modal to select a group and send invitation
+// Invite Logic
+let selectedPeerId = null;
+
+async function invitePeer(peerId, peerName) {
+    selectedPeerId = peerId;
+    document.getElementById('inviteText').textContent = `Select a group to invite ${peerName}:`;
+
+    // Fetch user's created groups
+    try {
+        // We reuse the browse endpoint but filter client-side or assume we have a "my-created-groups" endpoint
+        // Actually we have /my-groups which returns groups I'm a MEMBER of. 
+        // We need to filter for groups where I am the CREATOR.
+        const response = await fetch(`${API_URL}/groups/my-groups/${user.id}`);
+        const data = await response.json();
+
+        if (data.success) {
+            const myCreatedGroups = data.groups.filter(g =>
+                (g.creatorId._id === user.id || g.creatorId === user.id) && g.status === 'active'
+            );
+
+            const select = document.getElementById('groupSelect');
+            select.innerHTML = '';
+
+            if (myCreatedGroups.length === 0) {
+                select.innerHTML = '<option value="">No created groups found</option>';
+            } else {
+                myCreatedGroups.forEach(group => {
+                    const option = document.createElement('option');
+                    option.value = group._id;
+                    option.textContent = group.title;
+                    select.appendChild(option);
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching groups:', error);
+        document.getElementById('groupSelect').innerHTML = '<option value="">Error loading groups</option>';
+    }
+
+    document.getElementById('inviteModal').style.display = 'block';
+}
+
+function closeInviteModal() {
+    document.getElementById('inviteModal').style.display = 'none';
+    selectedPeerId = null;
+}
+
+// Close modal if clicked outside
+window.onclick = function (event) {
+    const modal = document.getElementById('inviteModal');
+    if (event.target == modal) {
+        closeInviteModal();
+    }
+}
+
+async function confirmInvite() {
+    const groupId = document.getElementById('groupSelect').value;
+
+    if (!groupId) {
+        alert('Please select a valid group (or create one first!)');
+        return;
+    }
+
+    if (!selectedPeerId) return;
+
+    try {
+        const response = await fetch(`${API_URL}/groups/${groupId}/add-member`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: selectedPeerId,
+                creatorId: user.id
+            }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert('User successfully added to the group!');
+            closeInviteModal();
+        } else {
+            alert(data.message || 'Failed to add user');
+        }
+    } catch (error) {
+        console.error('Error inviting info:', error);
+        alert('Error sending invite');
+    }
 }
 
 function applyPeerFilters() {
