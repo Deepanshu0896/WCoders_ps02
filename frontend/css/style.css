@@ -540,3 +540,438 @@ body {
     cursor: not-allowed;
 }
 /* lakshay ka khatam  */
+
+/* ===== SETTINGS PAGE ===== */
+.settings-section {
+    padding: 2rem;
+    max-width: 900px;
+}
+
+.settings-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2rem;
+}
+
+.settings-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.75rem;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+}
+
+.setting-item>div {
+    flex: 1;
+}
+
+.setting-item strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+
+.setting-item p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.account-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-danger {
+    padding: 0.75rem 1.5rem;
+    background: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.about-info {
+    color: var(--text-secondary);
+}
+
+.about-info p {
+    margin-bottom: 0.5rem;
+}
+
+/* Toast Animation */
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+/* ===== FOOTER ADMIN ACCESS ===== */
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-access {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.admin-icon {
+    font-size: 1.25rem;
+}
+
+/* ===== ADMIN LOGIN PAGE ===== */
+.admin-info {
+    background: #fef3c7;
+    border: 2px solid #f59e0b;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-info p {
+    margin: 0.25rem 0;
+    color: #92400e;
+}
+
+.admin-info strong {
+    color: #78350f;
+}
+
+/* ===== SCHEDULE PAGE ===== */
+.schedule-section {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.schedule-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+.schedule-card h2 {
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.schedule-card>p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.time-slots-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.time-slot {
+    background: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.slot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.slot-header h4 {
+    margin: 0;
+    color: var(--primary-color);
+}
+
+.free-slots-display {
+    margin-top: 1rem;
+}
+
+.free-slots-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.free-slot-item {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-badge {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.duration {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.success-message {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #10b981;
+}
+
+.warning-message {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #f59e0b;
+}
+
+.resource-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.resource-actions .btn-icon {
+    flex: 1;
+    min-width: 100px;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+}
+
+
+/* ===== ADMIN SPECIFIC STYLES ===== */
+.activity-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.3s ease;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-item:hover {
+    background: var(--bg-secondary);
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.activity-icon.user {
+    background: #e0e7ff;
+    color: #4f46e5;
+}
+
+.activity-icon.group {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.activity-icon.booking {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.activity-icon.resource {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.activity-content p {
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.activity-time {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Modal Animation */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal[style*="display: flex"] {
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    animation: modalSlideIn 0.3s forwards;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.close:hover {
+    color: var(--text-primary);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Live Time Display */
+.live-time {
+    margin-left: auto;
+    margin-right: 20px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    background: var(--card-bg);
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.live-time:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
