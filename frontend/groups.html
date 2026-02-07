@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browse Groups - PeerSync</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!--SLIDEbar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>📚 PeerSync</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item">
+            <span class="icon">🏠</span>
+            Dashboard
+          </a>
+          <a href="groups.html" class="nav-item active">
+            <span class="icon">👥</span>
+            Groups
+          </a>
+
+          <a href="peers.html" class="nav-item">
+            <span class="icon">🔍</span>
+            Find Peers
+          </a>
+          <a href="resources.html" class="nav-item">
+            <span class="icon">📍</span>
+            Resources
+          </a>
+          <a href="settings.html" class="nav-item">
+            <span class="icon">⚙️</span>
+            Settings
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <button onclick="logout()" class="btn-logout">Logout</button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="topbar">
+          <h1>Browse Groups</h1>
+          <a href="create-group.html" class="btn-primary">+ Create Group</a>
+        </header>
+
+        <!-- Filters -->
+        <section class="filters-section">
+          <div class="filters">
+            <select id="activityTypeFilter" class="filter-select">
+              <option value="">All Activities</option>
+              <option value="study_group">Study Group</option>
+              <option value="project_work">Project Work</option>
+              <option value="assignment_help">Assignment Help</option>
+              <option value="exam_prep">Exam Prep</option>
+              <option value="skill_workshop">Skill Workshop</option>
+            </select>
+
+            <select id="subjectFilter" class="filter-select">
+              <option value="">All Subjects</option>
+              <option value="Data Structures">Data Structures</option>
+              <option value="Algorithms">Algorithms</option>
+              <option value="Web Development">Web Development</option>
+              <option value="Machine Learning">Machine Learning</option>
+              <option value="Database">Database</option>
+            </select>
+
+            <select id="locationFilter" class="filter-select">
+              <option value="">All Locations</option>
+              <option value="Library Room 204">Library Room 204</option>
+              <option value="Computer Lab C">Computer Lab C</option>
+              <option value="Seminar Hall A">Seminar Hall A</option>
+            </select>
+
+            <button onclick="applyFilters()" class="btn-primary">
+              Apply Filters
+            </button>
+            <button onclick="clearFilters()" class="btn-outline">Clear</button>
+          </div>
+        </section>
+
+        <!-- Groups List -->
+        <section class="groups-section">
+          <div id="groupsList" class="groups-grid">
+            <div class="loading">Loading groups...</div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="js/groups.js"></script>
+  </body>
+</html>
