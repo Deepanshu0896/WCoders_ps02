@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - PeerSync</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>📚 PeerSync</h1>
+                <h2>Create Your Account</h2>
+            </div>
+            
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Rahul Kumar" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="rahul@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required minlength="6">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="branch">Branch</label>
+                        <select id="branch" name="branch" required>
+                            <option value="">Select Branch</option>
+                            <option value="CSE">Computer Science</option>
+                            <option value="ECE">Electronics</option>
+                            <option value="ME">Mechanical</option>
+                            <option value="CE">Civil</option>
+                            <option value="EE">Electrical</option>
+                            <option value="IT">IT</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <select id="year" name="year" required>
+                            <option value="">Select Year</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="skills">Skills (comma-separated)</label>
+                    <input type="text" id="skills" name="skills" placeholder="Python, DSA, Web Development">
+                    <small style="color: #6b7280; font-size: 0.875rem;">Optional</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="interests">Interests (comma-separated)</label>
+                    <input type="text" id="interests" name="interests" placeholder="AI/ML, Competitive Programming">
+                    <small style="color: #6b7280; font-size: 0.875rem;">Optional</small>
+                </div>
+
+                <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">Create Account</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    
+    <!-- Inline script for debugging -->
+    <script>
+        console.log('Register page loaded');
+        console.log('Form element:', document.getElementById('registerForm'));
+        console.log('Auth.js loaded:', typeof window !== 'undefined');
+    </script>
+</body>
+</html>
