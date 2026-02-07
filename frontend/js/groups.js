@@ -9,8 +9,26 @@ if (!user || !token) {
 
 // Browse Groups Page
 if (document.getElementById('groupsList')) {
+    loadMyGroups();
     loadSuggestedGroups(); // Load AI suggestions
     loadGroups();
+}
+
+async function loadMyGroups() {
+    try {
+        const response = await fetch(`${API_URL}/groups/my-groups/${user.id}`);
+        const data = await response.json();
+
+        if (data.success && data.groups.length > 0) {
+            document.getElementById('myGroupsSection').style.display = 'block';
+            displayGroups(data.groups, 'myGroupsList');
+        } else {
+            document.getElementById('myGroupsSection').style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error loading my groups:', error);
+        document.getElementById('myGroupsList').innerHTML = '<p class="info-message">Error loading your groups</p>';
+    }
 }
 
 async function loadSuggestedGroups() {
