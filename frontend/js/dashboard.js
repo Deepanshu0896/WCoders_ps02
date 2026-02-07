@@ -85,6 +85,45 @@ async function loadDashboardData() {
     } catch (error) {
         console.error('Error fetching groups:', error);
     }
+
+    // Load AI Suggestions
+    loadSuggestions();
+}
+
+async function loadSuggestions() {
+    try {
+        const response = await fetch(`${API_URL}/peers/suggestions/${user.id}`);
+        const data = await response.json();
+
+        const container = document.getElementById('aiSuggestions');
+
+        if (!data.success || data.suggestions.length === 0) {
+            container.innerHTML = '<p class="info-message">No suggestions found. Try adding more skills/interests!</p>';
+            return;
+        }
+
+        container.innerHTML = data.suggestions.map(peer => `
+            <div class="suggestion-card">
+                <div class="suggestion-header">
+                    <span class="avatar">${getInitials(peer.name)}</span>
+                    <div class="suggestion-info">
+                        <h4>${peer.name}</h4>
+                        <span class="match-score">🔥 ${peer.score} Match Points</span>
+                    </div>
+                </div>
+                <p class="match-reason">✨ ${peer.matchReason}</p>
+                <button onclick="window.location.href='peers.html'" class="btn-sm btn-outline">View Profile</button>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        console.error('Error loading suggestions:', error);
+        document.getElementById('aiSuggestions').innerHTML = '<p class="error-message">Failed to load suggestions</p>';
+    }
+}
+
+function getInitials(name) {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 }
 
 function displayUpcomingGroups(groups) {

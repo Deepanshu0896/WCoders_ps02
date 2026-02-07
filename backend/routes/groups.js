@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Group = require('../models/Group');
+const User = require('../models/User');
 
 // Create a new group
 router.post('/create', async (req, res) => {
@@ -191,8 +192,9 @@ router.delete('/:groupId', async (req, res) => {
       return res.status(404).json({ message: 'Group not found' });
     }
 
-    // Verify creator
-    if (group.creatorId.toString() !== userId) {
+    // Verify creator or admin
+    const user = await User.findById(userId);
+    if (group.creatorId.toString() !== userId && (!user || !user.isAdmin)) {
       return res.status(401).json({ message: 'Not authorized to delete this group' });
     }
 

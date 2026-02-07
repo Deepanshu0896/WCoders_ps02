@@ -47,7 +47,12 @@ function displayGroups(groups) {
         return;
     }
 
-    container.innerHTML = groups.map(group => `
+    container.innerHTML = groups.map(group => {
+        const isCreator = group.creatorId._id === user.id;
+        const isAdmin = user.isAdmin;
+        const canDelete = isCreator || isAdmin;
+
+        return `
         <div class="group-card">
             <div class="group-header">
                 <h3 class="group-title">${group.title}</h3>
@@ -62,15 +67,46 @@ function displayGroups(groups) {
             </div>
             <div class="group-footer">
                 <span class="members-count">👥 ${group.members.length}/${group.maxMembers} members</span>
-                ${group.members.length < group.maxMembers && !group.members.some(m => m._id === user.id)
-            ? `<button class="btn-join" onclick="joinGroup('${group._id}')">Join Group</button>`
-            : group.members.some(m => m._id === user.id)
-                ? `<button class="btn-join" style="background: var(--secondary-color);" disabled>Joined ✓</button>`
-                : `<button class="btn-join" disabled>Full</button>`
-        }
+                <div class="action-buttons">
+                    ${group.members.length < group.maxMembers && !group.members.some(m => m._id === user.id)
+                ? `<button class="btn-join" onclick="joinGroup('${group._id}')">Join Group</button>`
+                : group.members.some(m => m._id === user.id)
+                    ? `<button class="btn-join" style="background: var(--secondary-color);" disabled>Joined ✓</button>`
+                    : `<button class="btn-join" disabled>Full</button>`
+            }
+                    ${canDelete ? `<button class="btn-danger-outline" onclick="deleteGroup('${group._id}')" style="margin-left: 10px;">Delete</button>` : ''}
+                </div>
             </div>
         </div>
-    `).join('');
+    `}).join('');
+}
+
+async function deleteGroup(groupId) {
+    if (!confirm('Are you sure you want to delete this group? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/groups/${groupId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: user.id }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert('Group deleted successfully!');
+            loadGroups();
+        } else {
+            alert(data.message || 'Failed to delete group');
+        }
+    } catch (error) {
+        console.error('Error deleting group:', error);
+        alert('Error deleting group');
+    }
 }
 
 async function joinGroup(groupId) {
