@@ -1,7 +1,9 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const initializeSignaling = require('./signaling');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -11,8 +13,14 @@ const adminRoutes = require('./routes/admin');
 const resourcesRoutes = require('./routes/resources');
 const app = express();
 
+// Create HTTP server for Socket.IO
+const server = http.createServer(app);
+
 // Connect to MongoDB
 connectDB();
+
+// Initialize WebRTC signaling server
+initializeSignaling(server);
 
 // Middleware
 app.use(cors());
@@ -28,12 +36,16 @@ app.use('/api/timetable', require('./routes/timetable'));
 
 // Health check
 app.get('/', (req, res) => {
-  res.json({ message: '✅ Resource & Peer Optimizer API is running!' });
+  res.json({
+    message: '✅ Resource & Peer Optimizer API is running!',
+    meshNetwork: '🌐 WebRTC Signaling Active'
+  });
 });
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🔗 WebRTC Signaling Server initialized`);
 });
 

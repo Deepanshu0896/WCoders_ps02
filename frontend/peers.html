@@ -50,7 +50,32 @@
     <main class="main-content">
       <header class="topbar">
         <h1>Find Peers</h1>
+        <div id="meshStatus" class="mesh-status">
+          <span class="status-indicator">Initializing...</span>
+        </div>
       </header>
+
+      <!-- P2P Chat Container (Hidden by default) -->
+      <div id="p2pChatContainer" class="p2p-chat-container"
+        style="display: none; background: #1e293b; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid #3b82f6;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h3 style="margin: 0; color: #60a5fa;">💬 P2P Direct Chat</h3>
+          <span style="font-size: 0.8rem; color: #94a3b8;">Works Offline 📡</span>
+        </div>
+        <div id="p2pMessages"
+          style="height: 100px; overflow-y: auto; background: #0f172a; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 4px; font-size: 0.9rem;">
+          <div style="color: #64748b; text-align: center;">No messages yet</div>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <input type="text" id="p2pInput" placeholder="Type a message..."
+            style="flex: 1; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: white;">
+          <button onclick="sendP2PMessage()"
+            style="padding: 0.5rem 1rem; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Send</button>
+          <button onclick="sendMeetupPrompt()"
+            style="padding: 0.5rem; background: #059669; color: white; border: none; border-radius: 4px; cursor: pointer;"
+            title="Send Meetup Request">📍</button>
+        </div>
+      </div>
 
       <!-- Search and Filters -->
       <section class="filters-section">
@@ -158,6 +183,13 @@
     }
   </style>
 
+  <!-- Socket.IO for WebRTC Signaling -->
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <!-- Mesh Network Manager -->
+  <script src="js/mesh-network.js"></script>
+  <!-- Offline Storage -->
+  <script src="js/offline-storage.js"></script>
+  <!-- Peers Page Logic -->
   <script src="js/peers.js"></script>
 </body>
 
